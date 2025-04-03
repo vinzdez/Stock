@@ -18,29 +18,37 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.vince.myapplication.presentation.destinations.CompanyInfoScreenDestination
 
 @RootNavGraph(true)
 @Destination
 @Composable
 fun CompanyListingsScreen(
     navigator: DestinationsNavigator,
-    viewModel: CompanyListingsViewModel = hiltViewModel(),
+    viewModel: CompanyListingsViewModel = hiltViewModel()
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = viewModel.state.isRefreshing
     )
     val state = viewModel.state
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         OutlinedTextField(
             value = state.searchQuery,
             onValueChange = {
-                viewModel.onEvent(CompanyListingsEvent.OnSearchQueryChange(it))
+                viewModel.onEvent(
+                    CompanyListingsEvent.OnSearchQueryChange(it)
+                )
             },
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(), placeholder = {
-                Text("Search...")
-            }, maxLines = 1, singleLine = true
+                .fillMaxWidth(),
+            placeholder = {
+                Text(text = "Search...")
+            },
+            maxLines = 1,
+            singleLine = true
         )
         SwipeRefresh(
             state = swipeRefreshState,
@@ -48,21 +56,31 @@ fun CompanyListingsScreen(
                 viewModel.onEvent(CompanyListingsEvent.Refresh)
             }
         ) {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 items(state.companies.size) { i ->
-                    val comany = state.companies[i]
-                    CompanyItem(comany, Modifier
-                        .fillMaxWidth()
-                        .clickable {
-
-                        })
+                    val company = state.companies[i]
+                    CompanyItem(
+                        company = company,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navigator.navigate(
+                                    CompanyInfoScreenDestination(company.symbol)
+                                )
+                            }
+                            .padding(16.dp)
+                    )
                     if (i < state.companies.size) {
-                        HorizontalDivider(Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(
+                            modifier = Modifier.padding(
+                                horizontal = 16.dp
+                            )
+                        )
                     }
-
                 }
             }
         }
     }
-
 }
