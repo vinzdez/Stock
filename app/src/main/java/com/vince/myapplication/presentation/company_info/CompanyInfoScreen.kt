@@ -49,7 +49,7 @@ fun CompanyInfoScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = company.symbol,
+                    text = symbol,
                     fontStyle = FontStyle.Italic,
                     fontSize = 14.sp,
                     modifier = Modifier.fillMaxWidth()
